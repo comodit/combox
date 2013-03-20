@@ -5,7 +5,7 @@
 import sys
 import json
 
-from comodit_combox import setup, deploy, teardown, cleanup
+from comodit_combox import setup, deploy, teardown, cleanup, control
 
 def main(argv):
 
@@ -27,6 +27,10 @@ def main(argv):
         teardown.teardown(config)
     elif command == 'cleanup':
         cleanup.cleanup(config)
+    elif command == 'start':
+        control.start(config)
+    elif command == 'stop':
+        control.stop(config)
     else:
         print "Unknown command %s" % command
         sys.exit(-1)
