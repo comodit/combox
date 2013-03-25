@@ -1,0 +1,30 @@
+{
+    "canPull": false,
+    "canPush": false,
+    "commands": [],
+    "compatibility": [],
+    "description": "",
+    "directories": [],
+    "documentation": "",
+    "files": [],
+    "groups": [],
+    "handlers": [],
+    "name": "rpm-build-environment-python",
+    "organization": "Alder",
+    "packages": [
+        {
+            "name": "python-setuptools"
+        },
+        {
+            "name": "python-devel"
+        }
+    ],
+    "parameters": [],
+    "price": "0.00",
+    "repositories": [],
+    "services": [],
+    "url": "",
+    "users": [],
+    "uuid": "DDC57B60955211E2AA8B4D4D7F000001",
+    "version": 3
+}

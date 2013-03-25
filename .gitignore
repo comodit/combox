@@ -1,5 +1,6 @@
 comodit.conf
 *.py[cod]
+*.iso
 
 # C extensions
 *.so
