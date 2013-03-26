@@ -9,7 +9,7 @@
         "name": "combox-host",
         "memory": "512",
         "mac": "",
-        "iso": "<path_to_iso>",
+        "iso": "",
         "storage": "<path_to_vm_disk>",
         "ports_fw" : [["127.0.0.1", "2222", "22"]],
         "shares" : [{"name":"share", "target":"<path_to_share_target>"}]
