@@ -3,7 +3,7 @@
     "username": "<username>",
     "password": <password>",
     "organization": "<organization>",
-    "gpxe_url": "https://ec2-54-247-107-93.eu-west-1.compute.amazonaws.com",
+    "gpxe_url": "https://my.comodit.com/gpxe",
     "time_out": "3600",
     "vm" : {
         "name": "combox-host",

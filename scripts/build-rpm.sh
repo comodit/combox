@@ -1,6 +1,6 @@
 #!/bin/bash
 NAME="combox"
-platforms=(epel-6-i386 fedora-18-i386)
+platforms=(epel-6-i386 fedora-16-i386 fedora-17-i386 fedora-18-i386)
 
 if [ -z $1 ]
 then
@@ -34,8 +34,7 @@ tar -cvzf $HOME/rpmbuild/SOURCES/${NAME}-${VERSION}-${RELEASE}.tar.gz * \
 --exclude build \
 --exclude dist \
 --exclude deb_dist \
---exclude combox.egg-info \
---exclude Vagrantfile
+--exclude combox.egg-info
 
 
 rpmbuild -ba $HOME/rpmbuild/SPECS/${NAME}.spec
