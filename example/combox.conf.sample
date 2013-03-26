@@ -12,20 +12,11 @@
         "iso": "<path_to_iso>",
         "storage": "<path_to_vm_disk>",
         "ports_fw" : [["127.0.0.1", "2222", "22"]],
-        "ports_fw" : [[<listen_host>, <local_port>, <remote_port>]],
         "shares" : [{"name":"share", "target":"<path_to_share_target>"}]
     },
     "applications":  [{
             "name": "example/virtualbox-guest-additions",
             "settings": {"shares":[{"name":"share", "mount":"/mnt"}]}
-        },
-        {
-            "name": "example/rpm-build-environment",
-            "settings": {}
-        },
-        {
-            "name": "example/rpm-build-environment-python",
-            "settings": {}
         }
     ],
     "platform": {
