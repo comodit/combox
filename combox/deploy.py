@@ -57,8 +57,9 @@ def deploy(config):
 
     # Install applications
     for app in config['applications']:
-        print "Installing application %s" % app["name"]
-        host.install(app["name"], app["settings"])
+        app_name = app['name'].split('/')[-1]
+        print "Installing application %s" % app_name
+        host.install(app_name, app['settings'])
         host.wait_for_state('READY', config['time_out'])
 
     # Goodbye
@@ -93,7 +94,9 @@ def modifyvm(vm):
     cmds = []
     cmds.append('VBoxManage modifyvm "%s" --ostype Linux' % vm['name'])
     cmds.append('VBoxManage modifyvm "%s" --memory %s --pae on --acpi on --ioapic on --boot1 disk --boot2 dvd' % (vm['name'], vm['memory']))
-    cmds.append('VBoxManage modifyvm "%s" --nic1 nat --macaddress1 %s' % (vm['name'], vm['mac']))
+
+    mac = ''.join(vm['mac'].split(':'))
+    cmds.append('VBoxManage modifyvm "%s" --nic1 nat --macaddress1 %s' % (vm['name'], mac))
     for item in vm['ports_fw']:
         cmds.append('VBoxManage modifyvm "%s" --natpf1 "guestssh,tcp,%s,%s,,%s"' % (vm['name'], item[0],item[1],item[2]))
     return cmds

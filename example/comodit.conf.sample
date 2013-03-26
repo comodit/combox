@@ -8,30 +8,28 @@
     "vm" : {
         "name": "combox-host",
         "memory": "512",
-        "mac": "525400010101",
+        "mac": "",
         "iso": "<path_to_iso>",
         "storage": "<path_to_vm_disk>",
         "ports_fw" : [["127.0.0.1", "2222", "22"]],
         "ports_fw" : [[<listen_host>, <local_port>, <remote_port>]],
         "shares" : [{"name":"share", "target":"<path_to_share_target>"}]
     },
-    "applications":  [
-        {
-            "name": "virtualbox-guest-additions",
+    "applications":  [{
+            "name": "example/virtualbox-guest-additions",
             "settings": {"shares":[{"name":"share", "mount":"/mnt"}]}
         },
         {
-            "name": "RPM Build Environment"
+            "name": "example/rpm-build-environment",
+            "settings": {}
         },
         {
-            "name": "RPM Build Environment - Python"
+            "name": "example/rpm-build-environment-python",
+            "settings": {}
         }
     ],
     "platform": {
-        "name" : "Physical",
-        "settings" : {
-            "mac_address": "52:54:00:01:01:01"
-        }
+        "name" : "Physical"
     },
     "distribution": {
         "name" : "CentOS 6 (Kickstart)",
