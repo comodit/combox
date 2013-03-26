@@ -12,5 +12,5 @@ def stop(config):
 
 def start(config):
     print "Starting virtual machine"
-    fork_cmd('virtualbox --startvm "%s"' % config['vm']['name'])
+    fork_cmd('VBoxManage startvm --type headless "%s"' % config['vm']['name'])
 
