@@ -11,8 +11,9 @@ def cleanup(config):
     # Delete applications
     for app in config['applications']:
         print "Removing application %s" % app["name"]
+        app_name = app['name'].split('/')[-1]
         try:
-            org.applications().delete(app['name'])
+            org.applications().delete(app_name)
         except Exception as e:
             print "Failed to remove application %s with error %s." % app[name], e
 

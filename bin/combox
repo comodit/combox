@@ -5,13 +5,14 @@
 import sys
 import json
 
-from comodit_combox import setup, deploy, teardown, cleanup, control
+from combox import setup, deploy, teardown, cleanup, control
+from combox.helper import randomMAC
 
 def main(argv):
 
     config = get_config()
     if config is None:
-        print "Failed to parse your comodit.conf file"
+        print "Failed to parse your combox.conf file"
         sys.exit(-1)
 
     if not len(argv):
@@ -36,11 +37,19 @@ def main(argv):
         sys.exit(-1)
 
 def get_config():
-    path = "./comodit.conf"
+    path = "./combox.conf"
+    config = {}
     with open(path,"r") as fd:
-        content = fd.read()
-        config = json.loads(content)
-        return config
+        config = json.load(fd)
+
+    if 'mac' not in config['vm'] or not config['vm']['mac']:
+        config['vm']['mac'] = randomMAC()
+
+    config['platform']['settings'] = {}
+    config['platform']['settings']['mac_address'] = config['vm']['mac'].upper()
+
+    return config
+
 
 if __name__ == "__main__":
     main(sys.argv[1:])

@@ -3,26 +3,24 @@
     "username": "<username>",
     "password": <password>",
     "organization": "<organization>",
+    "gpxe_url": "https://my.comodit.com/gpxe",
     "time_out": "3600",
     "vm" : {
         "name": "combox-host",
         "memory": "512",
-        "mac": "525400010101",
-        "iso": "<path_to_iso>",
+        "mac": "",
+        "iso": "",
         "storage": "<path_to_vm_disk>",
+        "ports_fw" : [["127.0.0.1", "2222", "22"]],
         "shares" : [{"name":"share", "target":"<path_to_share_target>"}]
     },
-    "applications":  [
-        {
-            "name": "virtualbox-guest-additions", 
+    "applications":  [{
+            "name": "example/virtualbox-guest-additions",
             "settings": {"shares":[{"name":"share", "mount":"/mnt"}]}
         }
     ],
     "platform": {
-        "name" : "Physical",
-        "settings" : {
-            "mac_address": "52:54:00:01:01:01"
-        }
+        "name" : "Physical"
     },
     "distribution": {
         "name" : "CentOS 6 (Kickstart)",
