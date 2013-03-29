@@ -1,5 +1,6 @@
 combox.conf
 *.py[cod]
+*.sw[po]
 *.iso
 
 # C extensions
