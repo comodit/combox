@@ -10,13 +10,24 @@ from combox.helper import randomMAC
 
 def main(argv):
 
-    config = get_config()
-    if config is None:
-        print "Failed to parse your combox.conf file"
+    try:
+        config = get_config()
+        if config is None:
+            print "Failed to parse your combox.conf file"
+            sys.exit(-1)
+    except IOError as err:
+        sys.stderr.write('combox.conf: ' + err.strerror + '\n')
+        sys.exit(-1)
+
+
+    if not which('VBoxManage'):
+        print "Combox requires VirtualBox."
+        print "Download it there: https://www.virtualbox.org/wiki/Downloads"
         sys.exit(-1)
 
     if not len(argv):
-        print "Missing command"
+        print "Missing command\n"
+        print_help()
         sys.exit(-1)
 
     command = argv[0]
@@ -36,6 +47,16 @@ def main(argv):
         print "Unknown command %s" % command
         sys.exit(-1)
 
+def print_help():
+    print """\
+setup \t\t Create a ComodIT environment and upload applications.
+deploy \t\t Define the host on ComodIT and deploy it on VirtualBox.
+start \t\t Start the VirtualBox VM.
+stop \t\t Stop the VirtualBox VM.
+teardown \t Power off the VirtualBox VM, unregister it, then delete the comodit host.
+cleanup \t Remove uploaded application from ComodIT.
+"""
+
 def get_config():
     path = "./combox.conf"
     config = {}
@@ -49,6 +70,24 @@ def get_config():
     config['platform']['settings']['mac_address'] = config['vm']['mac'].upper()
 
     return config
+
+def which(program):
+    import os
+    def is_exe(fpath):
+        return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
+
+    fpath, fname = os.path.split(program)
+    if fpath:
+        if is_exe(program):
+            return program
+    else:
+        for path in os.environ["PATH"].split(os.pathsep):
+            path = path.strip('"')
+            exe_file = os.path.join(path, program)
+            if is_exe(exe_file):
+                return exe_file
+
+    return None
 
 
 if __name__ == "__main__":
