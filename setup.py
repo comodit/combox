@@ -2,7 +2,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name = "combox",
+    name = "comodit-combox",
     version = "0.1",
     description = "Easily deploy and manage local development environments on your own system.",
     packages = find_packages(),
