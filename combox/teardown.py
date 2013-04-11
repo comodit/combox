@@ -4,9 +4,10 @@ from comodit_client.api import Client
 from comodit_client.api.exceptions import PythonApiException
 from comodit_client.rest.exceptions import ApiException
 
+from combox.config import config
 from helper import create_host, get_short_hostname, exec_cmd, exec_cmds
 
-def teardown(config):
+def teardown():
     # Script
     print "Teardown of development environment"
 

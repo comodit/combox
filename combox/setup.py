@@ -2,7 +2,9 @@ from comodit_client.api import Client
 from comodit_client.api.collection import EntityNotFoundException
 from comodit_client.api.importer import Import
 
-def setup(config):
+from combox.config import config
+
+def setup():
     # Connect to the ComodIT API
     client = Client(config['endpoint'], config['username'], config['password'])
     org = client.get_organization(config['organization'])

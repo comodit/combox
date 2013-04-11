@@ -8,11 +8,12 @@ from comodit_client.api.collection import EntityNotFoundException
 from comodit_client.rest.exceptions import ApiException
 from comodit_client.api.host import Host
 
+from combox.config import config
 from helper import create_host, get_short_hostname, exec_cmd, exec_cmds, fork_cmd
 from helper import download_iso
 
 
-def deploy(config):
+def deploy():
 
     # Script
     print "Deploying Development Host"
