@@ -1,9 +1,68 @@
 import os
+import sys
 import json
 
+from os.path import expanduser, join
 from clint import args
 from combox.helper import randomMAC
 from combox.exception import FatalException
+
+if sys.version_info < (3, 0):
+    from ConfigParser import RawConfigParser, Error as ConfigParserError
+else:
+    from configparser import RawConfigParser, Error as ConfigParserError
+
+
+def _verify_args():
+    """
+    """
+
+    if not len(args.all):
+        raise FatalException("Missing command. You should try the --help "
+                             "option!")
+
+def _verify_binaries():
+    """
+    """
+
+    if not which('VBoxManage'):
+        err = "Combox requires VirtualBox.\nDownload it there: " \
+              "https://www.virtualbox.org/wiki/Downloads"
+        raise FatalException(err)
+
+
+def _load_combox_conf():
+    """
+    """
+
+    path = os.path.join(os.getcwd(), 'combox.conf')
+    config = {}
+
+    with open(path, 'r') as fd:
+        config = json.load(fd)
+
+    if 'mac' not in config['vm'] or not config['vm']['mac']:
+        config['vm']['mac'] = randomMAC()
+
+    config['platform']['settings'] = {}
+    config['platform']['settings']['mac_address'] = config['vm']['mac'].upper()
+
+    return config
+
+
+def _load_comoditrc_conf():
+    """
+    """
+
+    parser = RawConfigParser()
+    parser.read(join(expanduser('~'), '.comoditrc'))
+
+    default_section = parser.items('default')
+    default_values = {}
+    for k, v in default_section:
+        default_values[k] = v
+
+    return default_values
 
 
 def is_executable(fpath):
@@ -35,27 +94,13 @@ def configure():
     (e.g. VBoxManage) and by loading the combox.conf configuration file.
     """
 
-    if not len(args.all):
-        raise FatalException("Missing command. You should try the --help "
-                             "option!")
+    _verify_args()
+    _verify_binaries()
+    combox_cfg = _load_combox_conf()
+    comodit_cfg = _load_comoditrc_conf()
 
-    if not which('VBoxManage'):
-        err = "Combox requires VirtualBox.\nDownload it there: " \
-              "https://www.virtualbox.org/wiki/Downloads"
-        raise FatalException(err)
-
-    path = os.path.join(os.getcwd(), 'combox.conf')
-    config = {}
-
-    with open(path, 'r') as fd:
-        config = json.load(fd)
-
-    if 'mac' not in config['vm'] or not config['vm']['mac']:
-        config['vm']['mac'] = randomMAC()
-
-    config['platform']['settings'] = {}
-    config['platform']['settings']['mac_address'] = config['vm']['mac'].upper()
-
+    # Merge configuration files.
+    config = dict(combox_cfg.items() + comodit_cfg.items())
     return config
 
 

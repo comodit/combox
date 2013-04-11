@@ -3,13 +3,8 @@ import time, sys, os
 from urlparse import urlparse
 
 from comodit_client.api import Client
-from comodit_client.api.exceptions import PythonApiException
-from comodit_client.api.collection import EntityNotFoundException
-from comodit_client.rest.exceptions import ApiException
-from comodit_client.api.host import Host
-
 from combox.config import config
-from helper import create_host, get_short_hostname, exec_cmd, exec_cmds, fork_cmd
+from helper import create_host, exec_cmds, fork_cmd
 from helper import download_iso
 
 
@@ -20,7 +15,7 @@ def deploy():
     start_time = time.time()
 
     # Connect to the ComodIT API
-    client = Client(config['endpoint'], config['username'], config['password'])
+    client = Client(config['api'], config['username'], config['password'])
     org = client.get_organization(config['organization'])
     env = org.get_environment('Development')
 
@@ -35,7 +30,7 @@ def deploy():
                                            org.access_key,
                                            org.secret_key,
                                            org.name,
-                                           urlparse(config['endpoint']).netloc)
+                                           urlparse(config['api']).netloc)
 
     # Define the vm
     print "Creating the virtual machine"
