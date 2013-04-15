@@ -4,6 +4,7 @@ import json
 
 from os.path import expanduser, join
 from clint import args
+from comodit_client.config import Config
 from combox.helper import randomMAC
 from combox.exception import FatalException
 
@@ -54,15 +55,16 @@ def _load_comoditrc_conf():
     """
     """
 
-    parser = RawConfigParser()
-    parser.read(join(expanduser('~'), '.comoditrc'))
+    profile_name = None
+    if '--profile' in args.flags:
+        profile_name = args.value_after('--profile')
 
-    default_section = parser.items('default')
-    default_values = {}
-    for k, v in default_section:
-        default_values[k] = v
-
-    return default_values
+    config = Config()
+    return {
+        'api': config.get_api(profile_name),
+        'username': config.get_username(profile_name),
+        'password': config.get_password(profile_name)
+    }
 
 
 def is_executable(fpath):
