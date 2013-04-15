@@ -49,7 +49,7 @@ def _load_combox_conf():
         config['gpxe_url'] = "https://my.comodit.com/gpxe"
 
     if 'shares' not in config['vm']:
-        config['shares'] = []
+        config['vm']['shares'] = []
 
     default_share = {"name":"default", "target": os.path.abspath(os.curdir)}
     config['vm']['shares'].insert(0, default_share)
