@@ -3,7 +3,7 @@ import sys
 import json
 
 from os.path import expanduser, join
-from clint import args
+from optparse import OptionParser
 from comodit_client.config import Config
 from combox.helper import randomMAC
 from combox.exception import FatalException
@@ -14,11 +14,11 @@ else:
     from configparser import RawConfigParser, Error as ConfigParserError
 
 
-def _verify_args():
+def _verify_args(args):
     """
     """
 
-    if not len(args.all):
+    if not len(args):
         raise FatalException("Missing command. You should try the --help "
                              "option!")
 
@@ -61,13 +61,13 @@ def _load_combox_conf():
     return config
 
 
-def _load_comoditrc_conf():
+def _load_comoditrc_conf(options):
     """
     """
 
     profile_name = None
-    if '--profile' in args.flags:
-        profile_name = args.value_after('--profile')
+    if options.profile:
+        profile_name = options.profile
 
     config = Config()
     return {
@@ -108,20 +108,27 @@ def which(program):
                 return exe_file
 
 
+def _configure_parser():
+    parser = OptionParser()
+    parser.add_option("-p", "--profile", dest="profile",
+                      help="Comodit-client profile name")
+
+    return parser.parse_args()
+
 def configure():
     """ Configures Combox by verifying if all components is correctly installed
     (e.g. VBoxManage) and by loading the combox.conf configuration file.
     """
 
-    _verify_args()
+    options, args = _configure_parser()
+    _verify_args(args)
     _verify_binaries()
     combox_cfg = _load_combox_conf()
-    comodit_cfg = _load_comoditrc_conf()
+    comodit_cfg = _load_comoditrc_conf(options)
 
     # Merge configuration files.
     config = dict(combox_cfg.items() + comodit_cfg.items())
     config['platform']['settings']['mac_address'] = config['vm']['mac'].upper()
-    from pprint import pprint; pprint(config)
     return config
 
 

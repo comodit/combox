@@ -7,7 +7,7 @@ def setup():
 
     # Connect to the ComodIT API
     client = Client(config['api'], config['username'], config['password'])
-    org = client.get_organization(config['default_organization'])
+    org = client.get_organization(config['organization'])
 
     print "Setting up ComodIT..."
 

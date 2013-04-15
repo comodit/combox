@@ -1,17 +1,30 @@
 #!/usr/bin/env python
 
-from clint import args
+import sys
 
 from combox import setup, deploy, teardown, cleanup, control
 from combox.exception import FatalException
-from combox.ui import print_help, error
 
 
-def main():
+def print_help():
+    thehelp = {
+        "cleanup": "Remove uploaded application from ComodIT.",
+        "deploy": "Define the host on ComodIT and deploy it on VirtualBox.",
+        "setup": "Create a ComodIT environment and upload applications.",
+        "start": "Start the VirtualBox VM.",
+        "stop": "Stop the VirtualBox VM.",
+        "teardown": "Power off the VirtualBox VM, unregister it, then delete "
+                    "the comodit host.",
+    }
+    for key, value in thehelp.iteritems():
+        print "\t", key+":", value
+
+def main(args):
     """ Entry point.
     """
 
-    commands = {
+    com = {
+        'help': print_help,
         'setup': setup.setup,
         'deploy': deploy.deploy,
         'teardown': teardown.teardown,
@@ -19,20 +32,17 @@ def main():
         'start': control.start,
         'stop': control.stop,
     }
-    command = args.get(0)
+    command = args[0]
 
     try:
-        commands[command]()
+        com[command]()
     except KeyError:
-        error("Unknown command: %s\nYou should try the --help option!" %
+        sys.exit("Unknown command: %s\nYou should try the --help option!" %
               command)
 
 
 if __name__ == "__main__":
     try:
-        if '--help' in args.flags:
-            print_help()
-        else:
-            main()
+        main(sys.argv[1:])
     except FatalException as e:
-        error(e.message)
+        sys.exit(e.message)

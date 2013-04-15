@@ -98,7 +98,8 @@ def modifyvm(vm):
     mac = ''.join(vm['mac'].split(':'))
     cmds.append('VBoxManage modifyvm "%s" --nic1 nat --macaddress1 %s' % (vm['name'], mac))
     for item in vm['ports_fw']:
-        cmds.append('VBoxManage modifyvm "%s" --natpf1 "guestssh,tcp,%s,%s,,%s"' % (vm['name'], item[0],item[1],item[2]))
+        cmds.append('VBoxManage modifyvm "%s" --natpf1 "%s,tcp,%s,%s,,%s"' %
+                (vm['name'], "guestssh" + item[1], item[0],item[1],item[2]))
     return cmds
 
 def createhd(vm):
