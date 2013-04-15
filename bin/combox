@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 
 from clint import args
-from ui import print_help, error
 
 from combox import setup, deploy, teardown, cleanup, control
 from combox.exception import FatalException
+from combox.ui import print_help, error
+
 
 def main():
     """ Entry point.
