@@ -4,9 +4,10 @@ from comodit_client.api.importer import Import
 from combox.config import config
 
 def setup():
+
     # Connect to the ComodIT API
     client = Client(config['api'], config['username'], config['password'])
-    org = client.get_organization(config['organization'])
+    org = client.get_organization(config['default_organization'])
 
     print "Setting up ComodIT..."
 
@@ -22,6 +23,6 @@ def setup():
         try:
             importer.import_application(org, app['name'])
         except Exception as e:
-            print "Failed to upload applicatin %s with error %s." % (app['name'], e)
+            print "Failed to upload application %s with error %s." % (app['name'], e)
 
     print "Done."

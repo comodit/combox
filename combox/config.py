@@ -36,7 +36,7 @@ def _load_combox_conf():
     """
     """
 
-    path = os.path.join(os.getcwd(), 'combox.conf')
+    path = os.path.join(os.getcwd(), '.combox/combox.conf')
     config = {}
 
     with open(path, 'r') as fd:
@@ -45,8 +45,18 @@ def _load_combox_conf():
     if 'mac' not in config['vm'] or not config['vm']['mac']:
         config['vm']['mac'] = randomMAC()
 
-    config['platform']['settings'] = {}
-    config['platform']['settings']['mac_address'] = config['vm']['mac'].upper()
+    if 'gpxe_url' not in config:
+        config['gpxe_url'] = "https://my.comodit.com/gpxe"
+
+    if 'shares' not in config['vm']:
+        config['shares'] = []
+
+    default_share = {"name":"default", "target": os.path.abspath(os.curdir)}
+    config['vm']['shares'].insert(0, default_share)
+
+    config['platform'] = {'settings':
+            {'mac_address':config['vm']['mac'].upper()}
+    }
 
     return config
 
@@ -63,7 +73,14 @@ def _load_comoditrc_conf():
     return {
         'api': config.get_api(profile_name),
         'username': config.get_username(profile_name),
-        'password': config.get_password(profile_name)
+        'password': config.get_password(profile_name),
+        'organization': config._get_value(profile_name, 'default_organization'),
+        'platform': {
+            'name': config._get_value(profile_name, 'default_platform'),
+            'settings' : {}
+        },
+        'time_out': config._get_value(profile_name, 'time_out'),
+        'gpxe_url': config._get_value(profile_name, 'gpxe_url')
     }
 
 
@@ -103,7 +120,12 @@ def configure():
 
     # Merge configuration files.
     config = dict(combox_cfg.items() + comodit_cfg.items())
+    config['platform']['settings']['mac_address'] = config['vm']['mac'].upper()
+    from pprint import pprint; pprint(config)
     return config
 
 
-config = configure()
+try:
+    config = configure()
+except FatalException as err:
+    sys.exit(err)

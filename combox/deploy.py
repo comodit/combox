@@ -20,7 +20,11 @@ def deploy():
     env = org.get_environment('Development')
 
     # Deploy host
-    host = create_host(env, config['vm']['name'], config['platform'], config['distribution'], [])
+    host = create_host(env,
+                       config['vm']['name'],
+                       config['platform'],
+                       config['distribution'],
+                       [])
     host.provision()
 
     # Download gPXE ISO
