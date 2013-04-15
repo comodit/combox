@@ -1,9 +1,9 @@
 from comodit_client.api import Client
-from comodit_client.api.importer import Import
+from combox.config import config
 
-def cleanup(config):
+def cleanup():
     # Connect to the ComodIT API
-    client = Client(config['endpoint'], config['username'], config['password'])
+    client = Client(config['api'], config['username'], config['password'])
     org = client.get_organization(config['organization'])
 
     print "Cleaning up ComodIT..."
@@ -15,6 +15,6 @@ def cleanup(config):
         try:
             org.applications().delete(app_name)
         except Exception as e:
-            print "Failed to remove application %s with error %s." % app[name], e
+            print "Failed to remove application %s with error %s." % app['name'], e
 
     print "Done."

@@ -1,5 +1,5 @@
 {
-    "endpoint": "https://my.comodit.com/api",
+    "api": "https://my.comodit.com/api",
     "username": "<username>",
     "password": <password>",
     "organization": "<organization>",
