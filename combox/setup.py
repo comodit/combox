@@ -15,17 +15,26 @@ def setup():
     upload_apps(org)
     print "Done."
 
+
 def create_organization():
     # Connect to the ComodIT API
     client = Client(config['api'], config['username'], config['password'])
     org = None
-    try:
-        org = client.get_organization(config['organization'])
-    except:
-        print "Organization does not exist. Creating a new one"
-        org = client.organizations().create(config['organization'])
 
+    if config['organization']:
+        org = client.get_organization(config['organization'])
+    else:
+        orgs = client.organizations().list()
+        if orgs == 1:
+            org = orgs[0]
+        elif orgs == 0:
+            raise FatalException("No organization found.")
+        else:
+            raise FatalException("Multiple organization defined. "
+                    "Please specify one in your ~/.comoditrc with the key "
+                    "\"default_organization\"")
     return org
+
 
 def create_platform(org):
     # Create platform if not provided or not existent
@@ -41,8 +50,9 @@ def create_platform(org):
                 found_platform = True
         if not found_platform:
             print "Platform not found. Creating PXE platform named \"gPXE\"."
-            org.platforms().create(config['platform']['name'],
+            org.platforms().create('gPXE',
                     driver_class="com.guardis.cortex.server.driver.PxeDriver")
+
 
 def create_distribution(org):
     # Buy distribution from store if not present in organization
@@ -56,12 +66,14 @@ def create_distribution(org):
         except Exception as err:
             raise FatalException(err)
 
+
 def create_environment(org):
     # Create environment (if not already present)
     try:
         org.environments().create("Development", "Development environment.")
     except:
         pass
+
 
 def upload_apps(org):
     importer = Import()

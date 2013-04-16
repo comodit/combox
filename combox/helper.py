@@ -103,3 +103,6 @@ def randomMAC(sep=':'):
         random.randint(0x00, 0xff),
         random.randint(0x00, 0xff) ]
     return sep.join(map(lambda x: "%02x" % x, mac)).upper()
+
+def get_combox_images_directory():
+    return os.path.join(os.path.expanduser('~'), '.combox')

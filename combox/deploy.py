@@ -1,11 +1,12 @@
 import time, sys, os
+import uuid
 
 from urlparse import urlparse
 
 from comodit_client.api import Client
 from combox.config import config
 from helper import create_host, exec_cmds, fork_cmd
-from helper import download_iso
+from helper import download_iso, get_combox_images_directory
 
 
 def deploy():
@@ -20,15 +21,11 @@ def deploy():
     env = org.get_environment('Development')
 
     # Deploy host
-    host = create_host(env,
-                       config['vm']['name'],
-                       config['platform'],
-                       config['distribution'],
-                       [])
+    host = create_host(env, config['vm']['name'], config['platform'], config['distribution'], [])
     host.provision()
 
     # Download gPXE ISO
-    if not config['vm']['iso'] or not os.path.exists(config['vm']['iso']):
+    if 'iso' not in config['vm'] or not os.path.exists(config['vm']['iso']):
         config['vm']['iso'] = download_iso(config['gpxe_url'],
                                            config['vm']['name'],
                                            org.access_key,
@@ -41,7 +38,6 @@ def deploy():
     success = create_combox(config['vm'])
     if not success:
         sys.exit(-1)
-
 
     # Start the vm
     print "Starting the virtual machine"
@@ -67,11 +63,17 @@ def deploy():
     print "Deployment time: " + str(total_time)
 
 def create_combox(vm):
+    import pdb; pdb.set_trace()
     cmds = createvm(vm)
     cmds += modifyvm(vm)
-    cmds += createhd(vm)
+    if not config['vm'].get('storage'):
+        storage_path = os.path.join(get_combox_images_directory(),
+                                    config['vm']['name'] + '-' +
+                                    str(uuid.uuid1()) +
+                                    ".vmdk")
+    cmds += createhd(vm, storage_path)
     cmds += storagectl(vm)
-    cmds += storageattach(vm)
+    cmds += storageattach(vm, storage_path)
 
     ret = exec_cmds(cmds)
 
@@ -102,14 +104,15 @@ def modifyvm(vm):
                 (vm['name'], "guestssh" + item[1], item[0],item[1],item[2]))
     return cmds
 
-def createhd(vm):
-     return ['VBoxManage createhd --filename %s --size 10000 --format VMDK' % vm['storage']]
+def createhd(vm, storage):
+    return ['VBoxManage createhd --filename %s --size 10000 --format VMDK' %
+        storage]
 
 def storagectl(vm):
      return ['VBoxManage storagectl "%s" --name "IDE Controller" --add ide' % vm['name']]
 
-def storageattach(vm):
+def storageattach(vm, storage):
     cmds = []
-    cmds.append('VBoxManage storageattach "%s" --storagectl "IDE Controller" --port 0 --device 0 --type hdd --medium %s' % (vm['name'], vm['storage']))
+    cmds.append('VBoxManage storageattach "%s" --storagectl "IDE Controller" --port 0 --device 0 --type hdd --medium %s' % (vm['name'], storage))
     cmds.append('VBoxManage storageattach "%s" --storagectl "IDE Controller" --port 1 --device 0 --type dvddrive --medium %s' % (vm['name'], vm['iso']))
     return cmds

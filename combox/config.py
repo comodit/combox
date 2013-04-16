@@ -52,9 +52,6 @@ def _load_combox_conf():
     if 'distribution' not in config or not config['distribution'].get('name'):
         raise FatalException('Distribution not defined')
 
-    if 'organization' not in config:
-        raise FatalException('Organization not defined')
-
     if 'shares' not in config['vm']:
         config['vm']['shares'] = []
 
@@ -84,6 +81,10 @@ def _load_comoditrc_conf(options):
         profile_name = options.profile
 
     config = Config()
+    try:
+        org = config._get_value(profile_name, 'default_organization')
+    except:
+        pass
 
     return {
         'api': config.get_api(profile_name),
@@ -123,11 +124,18 @@ def _configure_parser():
 
     return parser.parse_args()
 
+
+def create_combox_images_directory():
+    combox_images_path = os.path.join(os.path.expanduser('~'), '.combox')
+    if not os.path.exists(combox_images_path):
+        os.mkdir(combox_images_path)
+
+
 def configure():
     """ Configures Combox by verifying if all components is correctly installed
     (e.g. VBoxManage) and by loading the combox.conf configuration file.
     """
-
+    create_combox_images_directory()
     options, args = _configure_parser()
     _verify_args(args)
     _verify_binaries()
