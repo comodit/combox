@@ -19,6 +19,20 @@ def deploy():
     client = Client(config['api'], config['username'], config['password'])
     org = client.get_organization(config['organization'])
     env = org.get_environment('Development')
+    try:
+        plat = org.get_platform(config['platform']['name'])
+    except:
+        found_platform = False
+        print "Looking for a physical platform..."
+        for pl in org.platforms().list():
+            if pl.driver.class_name == "com.guardis.cortex.server.driver.PxeDriver":
+                config['platform']['name'] = pl.driver.class_name
+                print "Found physical platform. Using \"%s\"" % pl.driver.name
+                found_platform = True
+        if not found_platform:
+            sys.exit("Platform not found.")
+
+
 
     # Deploy host
     host = create_host(env, config['vm']['name'], config['platform'], config['distribution'], [])

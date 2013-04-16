@@ -47,7 +47,7 @@ def _load_combox_conf():
         config['gpxe_url'] = "https://my.comodit.com/gpxe"
 
     if 'time_out' not in config or not config['time_out']:
-        config['timeout'] = 3600
+        config['time_out'] = 3600
 
     if 'distribution' not in config or not config['distribution'].get('name'):
         raise FatalException('Distribution not defined')
