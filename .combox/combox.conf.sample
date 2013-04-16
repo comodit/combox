@@ -2,8 +2,6 @@
     "vm" : {
         "name": "combox-host",
         "memory": "512",
-        "mac": "",
-        "iso": "",
         "storage": "<path_to_vm_disk>",
         "ports_fw" : [["127.0.0.1", "2222", "22"]],
         "shares" : []
@@ -14,7 +12,8 @@
         }
     ],
     "distribution": {
-        "name" : "CentOS 6 (Kickstart)",
+        "name" : "CentOS 6",
+        "store_uuid": "EA09D3703EC811E28139D51B7F000001"
         "settings" : {
             "root_password": "secret"
         }

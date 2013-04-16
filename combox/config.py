@@ -4,7 +4,7 @@ import json
 
 from os.path import expanduser, join
 from optparse import OptionParser
-from comodit_client.config import Config
+from comodit_client.config import Config, ConfigException
 from combox.helper import randomMAC
 from combox.exception import FatalException
 
@@ -42,21 +42,35 @@ def _load_combox_conf():
     with open(path, 'r') as fd:
         config = json.load(fd)
 
-    if 'mac' not in config['vm'] or not config['vm']['mac']:
-        config['vm']['mac'] = randomMAC()
 
-    if 'gpxe_url' not in config:
+    if 'gpxe_url' not in config or not config['gpxe_url']:
         config['gpxe_url'] = "https://my.comodit.com/gpxe"
+
+    if 'time_out' not in config or not config['time_out']:
+        config['timeout'] = 3600
+
+    if 'distribution' not in config or not config['distribution'].get('name'):
+        raise FatalException('Distribution not defined')
+
+    if 'organization' not in config:
+        raise FatalException('Organization not defined')
 
     if 'shares' not in config['vm']:
         config['vm']['shares'] = []
 
+    if 'mac' not in config['vm'] or not config['vm']['mac']:
+        config['vm']['mac'] = randomMAC()
+
     default_share = {"name":"default", "target": os.path.abspath(os.curdir)}
     config['vm']['shares'].insert(0, default_share)
 
-    config['platform'] = {'settings':
-            {'mac_address':config['vm']['mac'].upper()}
-    }
+    if 'platform' not in config:
+        config['platform'] = {
+            'name': 'gPXEa',
+            'settings': {
+                'mac_address':config['vm']['mac'].upper()
+            }
+        }
 
     return config
 
@@ -70,17 +84,11 @@ def _load_comoditrc_conf(options):
         profile_name = options.profile
 
     config = Config()
+
     return {
         'api': config.get_api(profile_name),
         'username': config.get_username(profile_name),
-        'password': config.get_password(profile_name),
-        'organization': config._get_value(profile_name, 'default_organization'),
-        'platform': {
-            'name': config._get_value(profile_name, 'default_platform'),
-            'settings' : {}
-        },
-        'time_out': config._get_value(profile_name, 'time_out'),
-        'gpxe_url': config._get_value(profile_name, 'gpxe_url')
+        'password': config.get_password(profile_name)
     }
 
 
