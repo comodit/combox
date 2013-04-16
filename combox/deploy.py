@@ -63,7 +63,6 @@ def deploy():
     print "Deployment time: " + str(total_time)
 
 def create_combox(vm):
-    import pdb; pdb.set_trace()
     cmds = createvm(vm)
     cmds += modifyvm(vm)
     if not config['vm'].get('storage'):

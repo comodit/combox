@@ -8,7 +8,7 @@ from combox.exception import FatalException
 
 def setup():
     print "Setting up ComodIT..."
-    org = create_organization()
+    org = setup_organization()
     create_platform(org)
     create_distribution(org)
     create_environment(org)
@@ -16,7 +16,7 @@ def setup():
     print "Done."
 
 
-def create_organization():
+def setup_organization():
     # Connect to the ComodIT API
     client = Client(config['api'], config['username'], config['password'])
     org = None
@@ -44,8 +44,8 @@ def create_platform(org):
         found_platform = False
         print "Looking for a physical platform..."
         for pl in org.platforms().list():
-            if pl.driver.name == "com.guardis.cortex.server.driver.PxeDriver":
-                config['platform']['name'] = pl.driver.name
+            if pl.driver.class_name == "com.guardis.cortex.server.driver.PxeDriver":
+                config['platform']['name'] = pl.driver.class_name
                 print "Found physical platform. Using \"%s\"" % pl.driver.name
                 found_platform = True
         if not found_platform:

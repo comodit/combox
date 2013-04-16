@@ -88,12 +88,16 @@ def _load_comoditrc_conf(options):
     try:
         org = config._get_value(profile_name, 'default_organization')
     except:
-        pass
+        org = ''
+
+    if options.organization:
+        org = options.organization
 
     return {
         'api': config.get_api(profile_name),
         'username': config.get_username(profile_name),
-        'password': config.get_password(profile_name)
+        'password': config.get_password(profile_name),
+        'organization': org
     }
 
 
@@ -125,6 +129,8 @@ def _configure_parser():
     parser = OptionParser()
     parser.add_option("-p", "--profile", dest="profile",
                       help="Comodit-client profile name")
+    parser.add_option("-o", "--organization", dest="organization",
+                      help="Comodit default organization")
 
     return parser.parse_args()
 
