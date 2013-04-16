@@ -63,11 +63,15 @@ def _load_combox_conf():
 
     if 'platform' not in config:
         config['platform'] = {
-            'name': 'gPXEa',
+            'name': 'gPXE',
             'settings': {
                 'mac_address':config['vm']['mac'].upper()
             }
         }
+
+    elif 'settings' not in config['platform']:
+        config['platform']['settings'] = {}
+        config['platform']['settings']['mac_address'] = config['vm']['mac'].upper()
 
     return config
 
