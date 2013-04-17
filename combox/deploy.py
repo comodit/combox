@@ -96,7 +96,7 @@ def create_combox(vm):
 
     # Add the shares
     for share in vm['shares']:
-        ret = exec_cmds(['VBoxManage sharedfolder add "%s" --name "%s" --hostpath "%s" --readonly' % (vm['name'], share['name'], share['target'])])
+        ret = exec_cmds(['VBoxManage sharedfolder add "%s" --name "%s" --hostpath "%s"' % (vm['name'], share['name'], share['target'])])
         if not ret:
             return False
 
