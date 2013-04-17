@@ -32,15 +32,22 @@ def _verify_binaries():
         raise FatalException(err)
 
 
-def _load_combox_conf():
+def _load_combox_conf(options):
     """
     """
+
 
     path = os.path.join(os.getcwd(), '.combox/combox.conf')
+    if options.config_file_path:
+        path = os.path.abspath(options.config_file_path)
+
     config = {}
 
-    with open(path, 'r') as fd:
-        config = json.load(fd)
+    try:
+        with open(path, 'r') as fd:
+            config = json.load(fd)
+    except (IOError, ValueError) as err:
+        raise FatalException('Could not load %s: %s' % (path, err))
 
 
     if 'gpxe_url' not in config or not config['gpxe_url']:
@@ -131,6 +138,8 @@ def _configure_parser():
                       help="Comodit-client profile name")
     parser.add_option("-o", "--organization", dest="organization",
                       help="Comodit default organization")
+    parser.add_option("-c", "--config", dest="config_file_path",
+                      help="Combox config file")
 
     return parser.parse_args()
 
@@ -149,7 +158,7 @@ def configure():
     options, args = _configure_parser()
     _verify_args(args)
     _verify_binaries()
-    combox_cfg = _load_combox_conf()
+    combox_cfg = _load_combox_conf(options)
     comodit_cfg = _load_comoditrc_conf(options)
 
     # Merge configuration files.
