@@ -75,8 +75,9 @@ def download_iso(gpxe_url, file_name, access_key,
           '&comodit_host=%s' % (access_key, secret_key, org_name, comodit_host)
 
     file_name += '.iso'
+    file_path = os.path.join(get_combox_images_directory(), file_name)
     u = urllib2.urlopen(url)
-    f = open(file_name, 'wb')
+    f = open(file_path, 'wb')
     meta = u.info()
     file_size = int(meta.getheaders("Content-Length")[0])
     print "Downloading: %s Bytes: %s" % (file_name, file_size)
