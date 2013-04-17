@@ -96,7 +96,7 @@ def download_iso(gpxe_url, file_name, access_key,
         print status,
 
     f.close()
-    return file_name
+    return file_path
 
 def randomMAC(sep=':'):
     mac = [ 0x00, 0x16, 0x3e,
