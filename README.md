@@ -11,20 +11,16 @@ the related post on [the ComodIT blog](http://www.comodit.com/blog.html).
 
 # Install
 
-## From repository
-
-### Fedora/CentOS Users
+## Fedora/CentOS Users
 
 1. Add ComodIT repository by executing the following command:
-
     - On CentOS 6: `rpm -ivh http://dl.comodit.com/pub/centos/6/x86_64/comodit-release-6-3.el6.noarch.rpm`
     - On Fedora 16: `rpm -ivh http://dl.comodit.com/pub/fedora/16/x86_64/comodit-release-16-1.fc16.noarch.rpm`
     - On Fedora 17: `rpm -ivh http://dl.comodit.com/pub/fedora/17/x86_64/comodit-release-17-1.fc17.noarch.rpm`
     - On Fedora 18: `rpm -ivh http://dl.comodit.com/pub/fedora/18/x86_64/comodit-release-18-1.fc18.noarch.rpm`
-
 2. Install client with command `yum install comodit-combox`.
 
-## Actions
+# Usage
 Usage: combox \<action\>
 - deploy    : Define the host on ComodIT and deploy it on VirtualBox.
 - teardown  : Power off the VirtualBox VM, unregister it, then delete the comodit host.
@@ -33,7 +29,7 @@ Usage: combox \<action\>
 - start     : Start the VirtualBox VM.
 - cleanup   : Remove uploaded application from ComodIT
 
-## Configuration
+# Configuration
 Everything takes place in the `.combox/combox.conf` configuration file.
 You can look at the sample provided [in this repository](https://github.com/comodit/combox/blob/master/.combox/combox.conf.sample).
 
