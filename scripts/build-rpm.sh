@@ -1,9 +1,9 @@
 #!/bin/bash
 NAME="comodit-combox"
 platforms=(epel-6-i386 \
-           fedora-16-i386 \
            fedora-17-i386 \
            fedora-18-i386 \
+           fedora-19-i386 \
 )
 
 if [ -z $1 ]
